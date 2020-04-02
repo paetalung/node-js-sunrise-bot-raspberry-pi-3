@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer-core');
 const LineNotify = require("./src/client");
-const timeOut = 20000; //20 sec time out
+const mins = 60000;           // Equal to 1 minute
+const timeOut = 1 * mins;     // Waiting for 1 minute then terminate the App
 
 const ACCESS_TOKEN = ""; //TEST TOKEN
 
@@ -16,7 +17,10 @@ async function run() {
   const page = await browser.newPage();
   await page.goto(URL);
 
-  //  Direct to the data
+  // Waiting for DOM
+  await page.waitFor("td.PM");
+     
+  // Direct to the data
   let sunrise = await page.evaluate(() => {
          let myItem = document.querySelectorAll('.PM > table > tbody > tr > td')[2];
          return myItem.querySelectorAll('table > tbody > tr > td')[1].innerText;
